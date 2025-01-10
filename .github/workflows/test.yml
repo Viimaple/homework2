@@ -17,6 +17,7 @@ jobs:
           colcon build
       - name: Run ROS2 test
         run: |
-          source /opt/ros/humble/setup.bash
+          . /opt/ros/humble/setup.bash
           source /root/ros2_ws/install/setup.bash
           bash -xv /root/ros2_ws/src/mypkg/test/test.bash
+
