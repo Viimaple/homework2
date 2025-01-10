@@ -9,8 +9,7 @@ jobs:
 
       - name: Setup ROS 2 environment
         run: |
-          bash -c "source /opt/ros/humble/setup.bash"
-
+          . /opt/ros/humble/setup.bash
       - name: Install dependencies
         run: |
           sudo apt update
