@@ -1,47 +1,16 @@
 name: test
 on: push
-
 jobs:
   test:
     runs-on: ubuntu-22.04
-    
     container: ryuichiueda/ubuntu22.04-ros2:latest
-
-    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up ROS 2 workspace
+      - uses: actions/checkout@v2
+      - name: build and test
         run: |
-          # 将代码复制到 ROS 2 工作区
-          mkdir -p /root/ros2_ws/src
-          rsync -av ./mypkg/ /root/ros2_ws/src/mypkg/
+          rsync -av ./ /root/ros2_ws/src/mypkg/
           cd /root/ros2_ws
-
-          # 更新包列表并安装依赖项
-          sudo apt-get update
-          sudo apt-get install -y python3-pip
-          pip3 install -r /root/ros2_ws/src/mypkg/requirements.txt || true  # 如果有依赖列表（requirements.txt）
-
-          # 编译 ROS 2 包
-          colcon build
-
-          # 设置 ROS 2 环境变量
-          . /opt/ros/foxy/setup.bash  # 使用 '.' 代替 'source'
-          . install/setup.bash  # 使用 '.' 代替 'source'
-
-      - name: Run tests
-        run: |
-          # 确保 ROS 2 环境被设置
-          . /opt/ros/foxy/setup.bash  # 使用 '.' 代替 'source'
-          . install/setup.bash  # 使用 '.' 代替 'source'
-
-          # 运行测试脚本
-          bash -xv /root/ros2_ws/src/mypkg/test/test.bash /root
-
-      - name: Clean up
-        run: |
-          # 可选：停止运行的进程或清理
-          pkill -f talker
-          pkill -f listener
+          pip install pytz
+          sudo apt install python3-pip
+          pip3 install pytz
+          bash -xv ./src/mypkg/test/test.bash /root
