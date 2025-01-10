@@ -35,7 +35,6 @@ $ ros2 run mypkg talker
 $ ros2 run mypkg listener
 ```
 ### プログラムの実行例
-- 正しい入力例
 ```sh
 [INFO] [1736545086.599539943] [listener]: Received time zone info: JST: UTC+9
 [INFO] [1736545087.571690731] [listener]: Received time zone info: JST: UTC+9
