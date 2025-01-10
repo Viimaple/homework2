@@ -30,6 +30,6 @@ jobs:
       - name: Run ROS 2 test
         run: |
           . /opt/ros/humble/setup.bash
-          . /root/ros2_ws/install/setup.bash
+          source /root/ros2_ws/install/setup.bash
           timeout 10 ros2 launch mypkg talk_listen.launch.py | tee /tmp/mypkg.log
           cat /tmp/mypkg.log | grep 'Listen: 10'
