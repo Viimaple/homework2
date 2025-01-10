@@ -9,7 +9,9 @@ jobs:
 
       - name: Setup ROS 2 environment
         run: |
-          . /opt/ros/humble/setup.bash
+          rsync -av ./ /root/ros2_ws/src/mypkg/
+          
+
       - name: Install dependencies
         run: |
           sudo apt update
