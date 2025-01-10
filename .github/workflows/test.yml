@@ -5,7 +5,8 @@ jobs:
   test:
     runs-on: ubuntu-22.04
     
-    container: ros:foxy  # 使用官方的 ROS 2 Foxy 容器镜像
+    container: ryuichiueda/ubuntu22.04-ros2:latest
+
     
     steps:
       - name: Checkout repository
