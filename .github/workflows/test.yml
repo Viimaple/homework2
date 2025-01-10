@@ -1,64 +1,13 @@
-# ROS2 タイムゾーン情報通信プログラムのテスト
-# このYAMLファイルは、ROS2のテストパイプラインで使用するテストケースを構成します。
-
-name: ROS2 Timezone Communication Test
-on:
-  push:
-    branches:
-      - main  # mainブランチへのpush時にテストを実行
-
+name: test
+on: push
 jobs:
   test:
-    runs-on: ubuntu-22.04  # テストはUbuntu 22.04環境で実行される
-
+    runs-on: ubuntu-22.04
+    container: ryuichiueda/ubuntu22.04-ros2:latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up ROS2
+      - uses: actions/checkout@v2
+      - name: build and test
         run: |
-          sudo apt update
-          sudo apt install -y curl gnupg2 lsb-release
-          curl -sSL https://raw.githubusercontent.com/ros2/ros2/master/ros2.repos | tee /tmp/ros2.repos
-          vcs import src < /tmp/ros2.repos
-          sudo apt install -y python3-colcon-common-extensions
-          sudo apt install -y python3-pip
-          pip install -r src/requirements.txt
-
-      - name: Install dependencies
-        run: |
-          sudo apt install python3-pytz
-          pip install pytz
-
-      - name: Build workspace
-        run: |
-          cd ~/ros2_ws
-          colcon build --symlink-install
-
-      - name: Source setup
-        run: |
-          source ~/ros2_ws/install/setup.bash
-
-      - name: Run Talker node
-        run: |
-          ros2 run mypkg talker &
-        
-      - name: Run Listener node
-        run: |
-          ros2 run mypkg listener &
-        
-      - name: Test Listener output
-        run: |
-          sleep 5  # Talkerが最初にメッセージを送信するのを待つ
-          output=$(ros2 topic echo /timezone_info -n 10)
-          echo "$output"
-          if [[ "$output" == *"Received time zone info: JST: UTC+9"* ]]; then
-            echo "Test Passed: Correct time zone info received."
-          else
-            echo "Test Failed: Expected time zone info not received."
-            exit 1
-          fi
-
-      - name: Clean up
-        run: |
-          killall ros2
+          rsync -av ./ /root/ros2_ws/src/mypkg/
+          cd /root/ros2_ws
+          bash -xv ./src/mypkg/test/test.bash /root
