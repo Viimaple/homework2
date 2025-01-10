@@ -1,5 +1,5 @@
 name: ROS2 Test Workflow
-on: push
+on: push 
 jobs:
   test:
     runs-on: ubuntu-22.04
@@ -9,7 +9,7 @@ jobs:
 
       - name: Setup ROS 2 environment
         run: |
-          bash -c "source /opt/ros/humble/setup.bash"
+          . /opt/ros/humble/setup.bash
 
       - name: Install dependencies
         run: |
@@ -23,13 +23,13 @@ jobs:
 
       - name: Build ROS 2 workspace
         run: |
-          source /opt/ros/humble/setup.bash
+          . /opt/ros/humble/setup.bash
           cd /root/ros2_ws
           colcon build
 
       - name: Run ROS 2 test
         run: |
-          source /opt/ros/humble/setup.bash
-          source /root/ros2_ws/install/setup.bash
+          . /opt/ros/humble/setup.bash
+          . /root/ros2_ws/install/setup.bash
           timeout 10 ros2 launch mypkg talk_listen.launch.py | tee /tmp/mypkg.log
           cat /tmp/mypkg.log | grep 'Listen: 10'
