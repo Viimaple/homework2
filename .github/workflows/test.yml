@@ -1,5 +1,5 @@
 name: ROS2 Test Workflow
-on: push 
+on: push
 jobs:
   test:
     runs-on: ubuntu-22.04
@@ -9,14 +9,12 @@ jobs:
 
       - name: Setup ROS 2 environment
         run: |
-           bash -c "source /opt/ros/humble/setup.bash"
-
+          bash -c "source /opt/ros/humble/setup.bash"
 
       - name: Install dependencies
-         run: |
+        run: |
           sudo apt update
           sudo apt install -y python3-pip python3-wheel
-
 
       - name: Copy source code to container workspace
         run: |
