@@ -5,7 +5,7 @@ jobs:
   test:
     runs-on: ubuntu-22.04
     container: ryuichiueda/ubuntu22.04-ros2:latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -23,14 +23,18 @@ jobs:
 
           # Build the ROS 2 workspace
           colcon build
-          source /opt/ros/foxy/setup.bash  # Source the ROS 2 environment
-          source install/setup.bash  # Source the workspace setup
+
+          # Source the ROS 2 environment and workspace setup
+          . /opt/ros/foxy/setup.bash  # Use '.' instead of 'source'
+          . install/setup.bash  # Use '.' instead of 'source'
 
       - name: Run tests
         run: |
+          # Source the ROS 2 setup files again to ensure environment is set
+          . /opt/ros/foxy/setup.bash  # Use '.' instead of 'source'
+          . install/setup.bash  # Use '.' instead of 'source'
+
           # Run the test bash script
-          source /opt/ros/foxy/setup.bash
-          source install/setup.bash
           bash -xv /root/ros2_ws/src/mypkg/test/test.bash /root
           
       - name: Clean up
