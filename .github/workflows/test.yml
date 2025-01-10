@@ -1,13 +1,40 @@
-name: test
-on: push
+name: Test ROS 2 Package
+
+on:
+  push:
+
 jobs:
   test:
     runs-on: ubuntu-22.04
     container: ryuichiueda/ubuntu22.04-ros2:latest
+    
     steps:
-      - uses: actions/checkout@v2
-      - name: build and test
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Set up ROS2 workspace
         run: |
+          # Clone the repository and set up the ROS 2 workspace
           rsync -av ./ /root/ros2_ws/src/mypkg/
           cd /root/ros2_ws
-          bash -xv ./src/mypkg/test/test.bash /root
+          colcon build  # Build the workspace
+          source /opt/ros/foxy/setup.bash  # Set up ROS2 environment
+          source install/setup.bash  # Source the installed workspace
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pip
+          pip3 install pytz  # Install Python dependencies
+
+      - name: Run nodes
+        run: |
+          source /opt/ros/foxy/setup.bash
+          source install/setup.bash
+          ros2 run mypkg talker &
+          ros2 run mypkg listener
+          
+      - name: Clean up
+        run: |
+          pkill -f talker
+          pkill -f listener
