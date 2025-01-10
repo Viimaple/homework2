@@ -15,7 +15,7 @@
     
 1. リポジトリをクローンします：
 ```sh
-$ https://github.com/Viimaple/ros2_ws/edit/kadai2
+$ https://github.com/Viimaple/homework2.git
 $ cd ros2_ws
 ```  
 2. 必要な依存パッケージをインストールします：
