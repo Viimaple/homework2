@@ -1,4 +1,4 @@
-name: test
+name: ROS2 Test Workflow
 on: push
 jobs:
   test:
@@ -6,7 +6,11 @@ jobs:
     container: ryuichiueda/ubuntu22.04-ros2:latest
     steps:
       - uses: actions/checkout@v2
-      - name: build and test
+      - name: Install pip
+        run: |
+          sudo apt update
+          sudo apt install -y python3-pip
+      - name: Build and test
         run: |
           rsync -av ./ /root/ros2_ws/src/mypkg/
           cd /root/ros2_ws
