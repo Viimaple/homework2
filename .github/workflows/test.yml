@@ -1,7 +1,5 @@
-name: Test ROS 2 Package
-
-on:
-  push:
+name: test
+on: push
 
 jobs:
   test:
@@ -12,29 +10,31 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       
-      - name: Set up ROS2 workspace
+      - name: Set up ROS 2 workspace
         run: |
-          # Clone the repository and set up the ROS 2 workspace
+          # Clone the repository to the ROS 2 workspace
           rsync -av ./ /root/ros2_ws/src/mypkg/
           cd /root/ros2_ws
-          colcon build  # Build the workspace
-          source /opt/ros/foxy/setup.bash  # Set up ROS2 environment
-          source install/setup.bash  # Source the installed workspace
 
-      - name: Install dependencies
-        run: |
+          # Install ROS 2 dependencies
           sudo apt-get update
           sudo apt-get install -y python3-pip
-          pip3 install pytz  # Install Python dependencies
+          pip3 install -r /root/ros2_ws/src/mypkg/requirements.txt || true  # 如果有依赖列表（requirements.txt）
 
-      - name: Run nodes
+          # Build the ROS 2 workspace
+          colcon build
+          source /opt/ros/foxy/setup.bash  # Source the ROS 2 environment
+          source install/setup.bash  # Source the workspace setup
+
+      - name: Run tests
         run: |
+          # Run the test bash script
           source /opt/ros/foxy/setup.bash
           source install/setup.bash
-          ros2 run mypkg talker &
-          ros2 run mypkg listener
+          bash -xv /root/ros2_ws/src/mypkg/test/test.bash /root
           
       - name: Clean up
         run: |
+          # Optionally stop running processes or clean up
           pkill -f talker
           pkill -f listener
